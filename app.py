@@ -1,5 +1,6 @@
 from langchain.text_splitter import RecursiveCharacterTextSplitter
 from PyPDF2 import PdfReader
+import fitz
 from nomic import login,embed
 from pinecone import Pinecone,ServerlessSpec
 import numpy as np
@@ -70,12 +71,20 @@ def givepdf(mypdf):
 
 
 # Load the PDF
-    local_pdf_path = download_pdf(mypdf)
-    if not local_pdf_path:
-     return
+    # local_pdf_path = download_pdf(mypdf)
+    # if not local_pdf_path:
+    #  return
+    response = requests.get(mypdf)
+    if response.status_code != 200:
+        return None
+
+    pdf_stream = response.content  # Get the binary content of the PDF
+    pdf_document = fitz.open(stream=pdf_stream, filetype="pdf")
+
 
     # Step 2: Load the downloaded PDF
-    pdfread = PdfReader(local_pdf_path)
+    pdfread = pdf_document
+    # PdfReader(local_pdf_path)
 # pdfread = PdfReader("maeks.pdf")
     # PINECONE_API_KEY="pcsk_4B27To_tY2jeLoxqgm97GKUfwxMccU39ZsN3jcd2D8Lq7UjZhjwEyHerwKDc8hpeinqpe"
     # pc=Pinecone(api_key=PINECONE_API_KEY)
@@ -83,8 +92,8 @@ def givepdf(mypdf):
 
 # Extract text from PDF
     extracted_text = ""
-    for page in pdfread.pages:
-        extracted_text += page.extract_text() + "\n"
+    for page in pdfread:
+        extracted_text += page.get_text("text") + "\n"
 
 # Initialize text splitter
     text_splitter = RecursiveCharacterTextSplitter(
@@ -94,7 +103,9 @@ def givepdf(mypdf):
 
 # Split text into chunks
     text_chunks = text_splitter.split_text(extracted_text)
-
+    # index.delete(delete_all=True)
+# https://cloud.appwrite.io/v1/storage/buckets/6786b6e90012a9d714fd/files/67b1d576000d6bcdc36c/view?project=6786b37a000e1a5e8c68&mode=admin
+# 
 # Print the chunks
 # print(text_chunks)
 # for i, chunk in enumerate(text_chunks):
