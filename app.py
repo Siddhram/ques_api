@@ -185,7 +185,7 @@ def ask_ques():
     ans=query_rag_system(d['ques'])
     return jsonify({"responce":f"{ans}"})
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run(host="0.0.0.0",port=5000,debug=True)
 # query = "give me questions"
 # givepdf("https://cloud.appwrite.io/v1/storage/buckets/6786b6e90012a9d714fd/files/67b1d576000d6bcdc36c/view?project=6786b37a000e1a5e8c68&mode=admin")
 # query_rag_system(query)
