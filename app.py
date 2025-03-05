@@ -1,6 +1,5 @@
 from langchain.text_splitter import RecursiveCharacterTextSplitter
 from PyPDF2 import PdfReader
-import fitz
 from nomic import login,embed
 from pinecone import Pinecone,ServerlessSpec
 import numpy as np
