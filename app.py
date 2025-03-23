@@ -152,6 +152,8 @@ def givepdf(mypdf):
 
 
 def query_rag_system(query):
+     api_key = 'nk-LeXriqiihZl6pT8TT4QhSB8JQVhmJBAznO6Y-EaaDX4'
+     login(api_key)
     # Generate embedding for the query
     query_embedding = embed.text(
         texts=[query],
